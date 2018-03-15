@@ -6,16 +6,11 @@ import matplotlib
 import matplotlib
 import scipy.stats
 
-def load_ces(file):
-    df_ces = pd.read_table(file)
-    ces = df_ces.sum()[2:]
-    return pd.DataFrame(ces,columns=['ces'])
 
-def load_ces2(file):
+def load_aggr(file,column):
     df_ces = pd.read_table(file)
-    df_ces = df_ces[df_ces.columns.values[2:-1]].dropna(axis=1).applymap(log)
     ces = df_ces.sum()[2:]
-    return pd.DataFrame(ces,columns=['ces'])
+    return pd.DataFrame(ces,columns=[column])
 
 
 def load_data(file, cat=None):    
