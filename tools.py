@@ -100,31 +100,31 @@ def boxplotcomp(df, genes, selectedgene=None,):
     plt.show()
 
 
-def get_msi_status(df, threshs, genes_full, genes_part ):
-    df['msi_status'] = np.zeros(len(df))
-    df['msi_deficiency'] = [list() for x in range(len(df.index))]
+def get_mmr_status(df, threshs, genes_full, genes_part):
+    df['mmr_status'] = np.zeros(len(df))
+    df['mmr_deficiency'] = [list() for x in range(len(df.index))]
     for g in genes_full:
         # for each gene of this list, if the expression is under the threshold, we consider it to be dMMR.
-        for ix in df[df[g+'_expr']< threshs[0] ]['msi_status'].index:
-            df = df.set_value(ix,'msi_status',1)
-            df.loc[ix,'msi_deficiency'] == df.loc[ix,'msi_deficiency'].append(g)
+        for ix in df[df[g+'_expr']< threshs[0] ]['mmr_status'].index:
+            df = df.set_value(ix,'mmr_status',1)
+            df.loc[ix,'mmr_deficiency'] == df.loc[ix,'mmr_deficiency'].append(g)
 
         # if the gene presents one mutation, we consider the tumor dMMR.
         no_mutations = pd.isnull(df[g+'_mut'])
         for ix in no_mutations[no_mutations==False].index:
-            df = df.set_value(ix,'msi_status',1)
-            df.loc[ix,'msi_deficiency'] == df.loc[ix,'msi_deficiency'].append(g)
+            df = df.set_value(ix,'mmr_status',1)
+            df.loc[ix,'mmr_deficiency'] == df.loc[ix,'mmr_deficiency'].append(g)
 
     for g in genes_part:      
-        for ix in df[df[g+'_expr']<threshs[1] ]['msi_status'].index:
+        for ix in df[df[g+'_expr']<threshs[1] ]['mmr_status'].index:
             try:
-                status = float(df[ix:ix+1]['msi_status'])
+                status = float(df[ix:ix+1]['mmr_status'])
             except:
                 status = -1
             
             if status == 0.:
-                df = df.set_value(ix,'msi_status',0.25)
+                df = df.set_value(ix,'mmr_status',0.25)
             elif status == 0.5:
-                df = df.set_value(ix,'msi_status',0.75)
+                df = df.set_value(ix,'mmr_status',0.75)
 
     return df
